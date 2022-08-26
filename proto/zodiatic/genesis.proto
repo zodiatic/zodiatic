@@ -1,0 +1,14 @@
+syntax = "proto3";
+package zodiatic.zodiatic.zodiatic;
+
+import "gogoproto/gogo.proto";
+import "zodiatic/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/zodiatic/zodiatic/x/zodiatic/types";
+
+// GenesisState defines the zodiatic module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
