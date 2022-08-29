@@ -560,6 +560,7 @@ func New(
 		// monitoringptypes.ModuleName,
 		zodiaticmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
+		wasm.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(
@@ -838,6 +839,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	// paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(zodiaticmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(wasm.ModuleName)
 
 	return paramsKeeper
 }
