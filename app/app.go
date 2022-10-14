@@ -101,6 +101,9 @@ import (
 
 	"github.com/zodiatic/zodiatic/docs"
 
+	lunarmodule "github.com/zodiatic/zodiatic/x/lunar"
+	lunarmodulekeeper "github.com/zodiatic/zodiatic/x/lunar/keeper"
+	lunarmoduletypes "github.com/zodiatic/zodiatic/x/lunar/types"
 	zodiaticmodule "github.com/zodiatic/zodiatic/x/zodiatic"
 	zodiaticmodulekeeper "github.com/zodiatic/zodiatic/x/zodiatic/keeper"
 	zodiaticmoduletypes "github.com/zodiatic/zodiatic/x/zodiatic/types"
@@ -194,6 +197,7 @@ var (
 		vesting.AppModuleBasic{},
 		// monitoringp.AppModuleBasic{},
 		zodiaticmodule.AppModuleBasic{},
+		lunarmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 		wasm.AppModuleBasic{},
 	)
@@ -264,11 +268,13 @@ type App struct {
 	// MonitoringKeeper monitoringpkeeper.Keeper
 
 	// make scoped keepers public for test purposes
-	ScopedIBCKeeper        capabilitykeeper.ScopedKeeper
-	ScopedTransferKeeper   capabilitykeeper.ScopedKeeper
+	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
+	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 	// ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
 	ZodiaticKeeper zodiaticmodulekeeper.Keeper
+
+	LunarKeeper lunarmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 	wasmKeeper       wasm.Keeper
 	scopedWasmKeeper capabilitykeeper.ScopedKeeper
@@ -277,7 +283,7 @@ type App struct {
 	mm *module.Manager
 
 	// sm is the simulation manager
-	sm *module.SimulationManager
+	sm           *module.SimulationManager
 	configurator module.Configurator
 }
 
@@ -310,6 +316,7 @@ func New(
 		// evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		zodiaticmoduletypes.StoreKey,
+		lunarmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 		wasm.StoreKey,
 	)
@@ -446,6 +453,14 @@ func New(
 	)
 	zodiaticModule := zodiaticmodule.NewAppModule(appCodec, app.ZodiaticKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.LunarKeeper = *lunarmodulekeeper.NewKeeper(
+		appCodec,
+		keys[lunarmoduletypes.StoreKey],
+		keys[lunarmoduletypes.MemStoreKey],
+		app.GetSubspace(lunarmoduletypes.ModuleName),
+	)
+	lunarModule := lunarmodule.NewAppModule(appCodec, app.LunarKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 	wasmDir := filepath.Join(homePath, "data")
 
@@ -530,6 +545,7 @@ func New(
 		transferModule,
 		// monitoringModule,
 		zodiaticModule,
+		lunarModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 		wasm.NewAppModule(appCodec, &app.wasmKeeper, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
 	)
@@ -559,6 +575,7 @@ func New(
 		paramstypes.ModuleName,
 		// monitoringptypes.ModuleName,
 		zodiaticmoduletypes.ModuleName,
+		lunarmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 		wasm.ModuleName,
 	)
@@ -584,6 +601,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		// monitoringptypes.ModuleName,
 		zodiaticmoduletypes.ModuleName,
+		lunarmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 		wasm.ModuleName,
 	)
@@ -614,6 +632,7 @@ func New(
 		feegrant.ModuleName,
 		// monitoringptypes.ModuleName,
 		zodiaticmoduletypes.ModuleName,
+		lunarmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 		wasm.ModuleName,
 	)
@@ -640,6 +659,7 @@ func New(
 		transferModule,
 		// monitoringModule,
 		zodiaticModule,
+		lunarModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -838,6 +858,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(zodiaticmoduletypes.ModuleName)
+	paramsKeeper.Subspace(lunarmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 	paramsKeeper.Subspace(wasm.ModuleName)
 

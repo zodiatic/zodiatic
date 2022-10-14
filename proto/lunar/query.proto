@@ -1,0 +1,75 @@
+syntax = "proto3";
+package zodiatic.zodiatic.lunar;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "lunar/params.proto";
+import "lunar/lunar.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/zodiatic/zodiatic/x/lunar/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/zodiatic/zodiatic/lunar/v1/params";
+  }
+  // Queries a Lunar by date(yyyymmdd).
+	rpc Lunar(QueryGetLunarRequest) returns (QueryGetLunarResponse) {
+		option (google.api.http).get = "/zodiatic/zodiatic/lunar/v1/lunar/{yyyymmdd}";
+	}
+
+	// Queries all Lunars.
+	rpc LunarAll(QueryAllLunarRequest) returns (QueryAllLunarResponse) {
+		option (google.api.http).get = "/zodiatic/zodiatic/lunar/v1/lunar";
+	}
+
+// Queries auspicious dates in a particular year(yyyy) or month(yyyymm).
+	rpc Auspicious(QueryAuspiciousRequest) returns (QueryAuspiciousResponse) {
+		option (google.api.http).get = "/zodiatic/zodiatic/lunar/v1/auspicious/{date}/{auspicious}";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetLunarRequest {
+	  uint64 yyyymmdd = 1;
+
+}
+
+message QueryGetLunarResponse {
+	Lunar lunar = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllLunarRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllLunarResponse {
+	repeated Lunar lunar = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryAuspiciousRequest {
+  uint64 date = 1;
+  string auspicious = 2;
+cosmos.base.query.v1beta1.PageRequest pagination = 3;
+}
+
+message QueryAuspiciousResponse {
+        repeated Lunar lunar = 1 [(gogoproto.nullable) = false];
+cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

@@ -1,0 +1,33 @@
+syntax = "proto3";
+package zodiatic.zodiatic.lunar;
+
+option go_package = "github.com/zodiatic/zodiatic/x/lunar/types";
+
+message Lunar {
+  uint64 yyyymmdd = 1; 
+  string date = 2; 
+  uint64 year = 3; 
+  uint64 month = 4; 
+  uint64 day = 5; 
+  string lunar = 6; 
+  string eightCharacters = 7; 
+  uint64 lunarYear = 8; 
+  uint64 lunarMonth = 9; 
+  uint64 lunarDay = 10; 
+  bool lunarLeapMonth = 11; 
+  string sexagenaryYear = 12; 
+  string sexagenaryMonth = 13; 
+  string sexagenaryDay = 14; 
+  string zodiac = 15; 
+  string zodiacEnglish = 16; 
+  uint64 dayOfWeek = 17; 
+  string auspiciousDirections = 18; 
+  string auspicious = 19; 
+  string inauspicious = 20; 
+  string auspiciousTime = 21; 
+  string inauspiciousTime = 22; 
+  uint64 version = 23; 
+  string remarks = 24; 
+  
+}
+

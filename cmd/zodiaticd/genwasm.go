@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/zodiatic/zodiatic/app"
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/spf13/cobra"
 	"github.com/ignite/cli/ignite/pkg/cosmoscmd"
+	"github.com/spf13/cobra"
+	"github.com/zodiatic/zodiatic/app"
 
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmcli "github.com/CosmWasm/wasmd/x/wasm/client/cli"

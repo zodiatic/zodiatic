@@ -1,0 +1,12 @@
+syntax = "proto3";
+package zodiatic.zodiatic.lunar;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/zodiatic/zodiatic/x/lunar/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}
